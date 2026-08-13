@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 
 try:
     from oaaclient.client import OAAClient, OAAClientError
-    from oaaclient.templates import CustomApplication, OAAPermission
+    from oaaclient.templates import CustomApplication, OAAPermission, OAAPropertyType
 except ImportError:
     print("ERROR: oaaclient is not installed. Run: pip install 'oaaclient>=1.1.0'", file=sys.stderr)
     sys.exit(1)
@@ -293,7 +293,7 @@ def build_oaa_payload(
     # ------------------------------------------------------------------
     # Define custom user properties
     # ------------------------------------------------------------------
-    app.property_definitions.define_local_user_property("EmployeeID", "string")
+    app.property_definitions.define_local_user_property("EmployeeID", OAAPropertyType.STRING)
 
     # ------------------------------------------------------------------
     # Row Security Classes → Application Resources
