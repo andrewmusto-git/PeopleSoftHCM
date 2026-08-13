@@ -384,7 +384,7 @@ def build_oaa_payload(
             if rowsecclass in rsc_ids:
                 local_user.add_permission(
                     "row_security_access",
-                    resource=rsc_objects[rowsecclass],
+                    resources=[rsc_objects[rowsecclass]],
                     apply_to_application=False,
                 )
             else:
