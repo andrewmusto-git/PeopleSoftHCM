@@ -306,7 +306,8 @@ def build_oaa_payload(
             continue
         description = _clean(rsc.get("DESCRIPTION")) or class_id
         resource = app.add_resource(class_id, resource_type="RowSecurityClass")
-        resource.name = description
+        if description and description != class_id:
+            resource.description = description
         rsc_ids.add(class_id)
         rsc_objects[class_id] = resource
 
@@ -324,7 +325,8 @@ def build_oaa_payload(
         description  = _clean(role.get("DESCRIPTION"))
 
         local_role = app.add_local_role(role_name)
-        local_role.name = display_name
+        if display_name and display_name != role_name:
+            local_role.description = display_name
         if description:
             local_role.description = description
 
@@ -369,7 +371,8 @@ def build_oaa_payload(
         rowsecclass  = _clean(user_data.get("ROWSECCLASS")).upper()
 
         local_user = app.add_local_user(oprid)
-        local_user.name      = display_name
+        if display_name and display_name != oprid:
+            local_user.full_name = display_name
         local_user.is_active = True
 
         if emplid:
