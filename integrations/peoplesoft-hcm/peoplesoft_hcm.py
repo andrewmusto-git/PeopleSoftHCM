@@ -443,7 +443,9 @@ def push_to_veza(cfg: dict, app: CustomApplication, dry_run: bool, save_json: bo
         veza_con.create_provider(cfg["provider_name"], custom_template="application")
         log.info("Created Veza provider: %s", cfg["provider_name"])
     except OAAClientError as exc:
-        if exc.status_code in (400, 409) and "already exists" in str(exc.message).lower():
+        # Veza returns 400 with field_violations when the provider already exists
+        exc_str = str(exc) + str(getattr(exc, "details", ""))
+        if "already exists" in exc_str.lower():
             log.info("Provider already exists: %s", cfg["provider_name"])
         else:
             log.error("Failed to create provider: %s — %s (HTTP %s)", exc.error, exc.message, exc.status_code)
