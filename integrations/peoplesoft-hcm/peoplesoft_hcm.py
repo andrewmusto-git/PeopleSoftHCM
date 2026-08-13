@@ -299,6 +299,7 @@ def build_oaa_payload(
     # Row Security Classes → Application Resources
     # ------------------------------------------------------------------
     rsc_ids: set[str] = set()
+    rsc_objects: dict[str, object] = {}
     for rsc in rowsec_classes:
         class_id = _clean(rsc.get("CLASSID"))
         if not class_id:
@@ -307,6 +308,7 @@ def build_oaa_payload(
         resource = app.add_resource(class_id, resource_type="RowSecurityClass")
         resource.name = description
         rsc_ids.add(class_id)
+        rsc_objects[class_id] = resource
 
     log.info("Added %d row security class resources", len(rsc_ids))
 
@@ -382,8 +384,7 @@ def build_oaa_payload(
             if rowsecclass in rsc_ids:
                 local_user.add_permission(
                     "row_security_access",
-                    resource_name=rowsecclass,
-                    resource_type="RowSecurityClass",
+                    resource=rsc_objects[rowsecclass],
                     apply_to_application=False,
                 )
             else:
