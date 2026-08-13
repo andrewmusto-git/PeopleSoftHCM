@@ -321,8 +321,6 @@ def build_oaa_payload(
         if description:
             local_role.description = description
 
-        # Roles grant read access to the application
-        local_role.add_permission("role_access", apply_to_application=True)
         role_ids.add(role_name)
 
     log.info("Added %d local roles", len(role_ids))
