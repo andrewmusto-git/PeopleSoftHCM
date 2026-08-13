@@ -251,8 +251,23 @@ def load_all_data(conn: object) -> tuple[list, list, list, list]:
 # ---------------------------------------------------------------------------
 
 def _clean(value) -> str:
-    """Return a stripped string, or empty string if None/blank."""
-    return (value or "").strip()
+    """Return a stripped string, or empty string if None/blank.
+
+    Handles Oracle CLOB objects returned by jaydebeapi, which must be
+    read via their Java .getSubString() method before Python can use them.
+    """
+    if value is None:
+        return ""
+    # jaydebeapi returns Oracle CLOBs as Java objects; convert to string first
+    type_name = type(value).__name__
+    if "CLOB" in type_name or "Clob" in type_name:
+        try:
+            # Java CLOB API: getSubString(pos, length) — pos is 1-based
+            length = int(value.length())
+            value = value.getSubString(1, length) if length > 0 else ""
+        except Exception:
+            value = str(value)
+    return str(value).strip()
 
 
 def build_oaa_payload(
