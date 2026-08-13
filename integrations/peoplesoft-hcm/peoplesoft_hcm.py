@@ -291,6 +291,11 @@ def build_oaa_payload(
     app.add_custom_permission("row_security_access", [OAAPermission.DataRead])
 
     # ------------------------------------------------------------------
+    # Define custom user properties
+    # ------------------------------------------------------------------
+    app.property_definitions.define_local_user_property("EmployeeID", "string")
+
+    # ------------------------------------------------------------------
     # Row Security Classes → Application Resources
     # ------------------------------------------------------------------
     rsc_ids: set[str] = set()
@@ -366,7 +371,7 @@ def build_oaa_payload(
         local_user.is_active = True
 
         if emplid:
-            local_user.add_attribute("EmployeeID", emplid)
+            local_user.set_property("EmployeeID", emplid)
 
         # Assign static roles
         for role_name in user_roles_map.get(oprid, []):
