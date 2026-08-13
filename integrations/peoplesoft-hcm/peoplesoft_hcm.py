@@ -434,6 +434,19 @@ def push_to_veza(cfg: dict, app: CustomApplication, dry_run: bool, save_json: bo
         veza_url = f"https://{veza_url}"
 
     veza_con = OAAClient(url=veza_url, token=cfg["veza_api_key"])
+
+    # Ensure the provider exists before pushing; create it if absent
+    try:
+        veza_con.create_provider(cfg["provider_name"], custom_template="application")
+        log.info("Created Veza provider: %s", cfg["provider_name"])
+    except OAAClientError as exc:
+        if exc.status_code == 409:
+            log.info("Provider already exists: %s", cfg["provider_name"])
+        else:
+            log.error("Failed to create provider: %s — %s (HTTP %s)", exc.error, exc.message, exc.status_code)
+            print(f"ERROR: Failed to create provider — {exc.message}", file=sys.stderr)
+            sys.exit(1)
+
     try:
         log.info(
             "Pushing to Veza: provider=%s  datasource=%s",
