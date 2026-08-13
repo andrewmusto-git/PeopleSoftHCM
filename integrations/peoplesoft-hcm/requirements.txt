@@ -1,0 +1,17 @@
+# PeopleSoft HCM → Veza OAA Integration — Python Dependencies
+# Install into a virtual environment:
+#   python3 -m venv venv && venv/bin/pip install -r requirements.txt
+
+# Veza OAA client
+oaaclient>=1.1.0
+
+# Environment variable loading
+python-dotenv>=1.0.0
+
+# JDBC connectivity (requires Java 8+ / JAVA_HOME set)
+jaydebeapi>=1.2.3
+JPype1>=1.4.0
+
+# HTTP utilities (used by oaaclient)
+requests>=2.31.0
+urllib3>=2.0.0
